@@ -29,7 +29,7 @@ namespace RoslynInfoLogger
         {
             string temporaryPath = Path.Combine(Path.GetTempPath(), "RoslynWorkspaceInfo.xml");
 
-            LogWorkspaceCommand.LogInfo(this, temporaryPath, CancellationToken.None);
+            LogWorkspaceCommand.LogInfo(this, temporaryPath);
         }
     }
 }
