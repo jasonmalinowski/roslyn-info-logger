@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using System.ComponentModel.Design;
 using System.IO;
+using System.Threading;
 
 namespace RoslynInfoLogger
 {
@@ -28,7 +29,7 @@ namespace RoslynInfoLogger
         {
             string temporaryPath = Path.Combine(Path.GetTempPath(), "RoslynWorkspaceInfo.xml");
 
-            LogWorkspaceCommand.LogInfo(this, temporaryPath);
+            LogWorkspaceCommand.LogInfo(this, temporaryPath, CancellationToken.None);
         }
     }
 }
