@@ -37,11 +37,11 @@ namespace RoslynInfoLogger
                     var projectElement = new XElement("project");
                     workspaceElement.Add(projectElement);
 
-                    projectElement.SetAttributeValue("id", project.Id.ToString());
+                    projectElement.SetAttributeValue("id", SanitizePath(project.Id.ToString()));
                     projectElement.SetAttributeValue("name", project.Name);
                     projectElement.SetAttributeValue("assemblyName", project.AssemblyName);
                     projectElement.SetAttributeValue("language", project.Language);
-                    projectElement.SetAttributeValue("path", project.FilePath ?? "(none)");
+                    projectElement.SetAttributeValue("path", SanitizePath(project.FilePath ?? "(none)"));
 
                     // Can we find a matching DTE project?
                     var langProjProject = TryFindLangProjProject(dte, project);
@@ -59,7 +59,7 @@ namespace RoslynInfoLogger
                             }
                             else
                             {
-                                dteReferences.Add(new XElement("metadataReference", new XAttribute("path", reference.Path)));
+                                dteReferences.Add(new XElement("metadataReference", new XAttribute("path", SanitizePath(reference.Path))));
                             }
                         }
                     }
@@ -74,7 +74,7 @@ namespace RoslynInfoLogger
 
                     foreach (var projectReference in project.AllProjectReferences)
                     {
-                        var referenceElement = new XElement("projectReference", new XAttribute("id", projectReference.ProjectId.ToString()));
+                        var referenceElement = new XElement("projectReference", new XAttribute("id", SanitizePath(projectReference.ProjectId.ToString())));
 
                         if (!project.ProjectReferences.Contains(projectReference))
                         {
@@ -130,6 +130,25 @@ namespace RoslynInfoLogger
             return dteProject?.Object as VSLangProj.VSProject;
         }
 
+        private static string SanitizePath(string s)
+        {
+            return ReplacePathComponent(s, Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "%USERPROFILE%");
+        }
+
+        private static string ReplacePathComponent(string s, string oldValue, string newValue)
+        {
+            while (true)
+            {
+                int index = s.IndexOf(oldValue, StringComparison.OrdinalIgnoreCase);
+                if (index == -1)
+                {
+                    return s;
+                }
+
+                s = s.Substring(0, index) + newValue + s.Substring(index + oldValue.Length);
+            }
+        }
+
         private static XElement CreateElementForPortableExecutableReference(MetadataReference reference)
         {
             var compilationReference = reference as CompilationReference;
@@ -142,12 +161,12 @@ namespace RoslynInfoLogger
             else if (portableExecutableReference != null)
             {
                 return new XElement("peReference",
-                    new XAttribute("file", portableExecutableReference.FilePath ?? "(none)"),
-                    new XAttribute("display", portableExecutableReference.Display));
+                    new XAttribute("file", SanitizePath(portableExecutableReference.FilePath ?? "(none)")),
+                    new XAttribute("display", SanitizePath(portableExecutableReference.Display)));
             }
             else
             {
-                return new XElement("metadataReference", new XAttribute("display", reference.Display));
+                return new XElement("metadataReference", new XAttribute("display", SanitizePath(reference.Display)));
             }
         }
 
