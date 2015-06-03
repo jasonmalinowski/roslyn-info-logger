@@ -15,6 +15,8 @@ namespace RoslynInfoLogger
         public static void LogInfo(IServiceProvider serviceProvider, string path)
         {
             var componentModel = (IComponentModel)serviceProvider.GetService(typeof(SComponentModel));
+            var dte = (EnvDTE.DTE)serviceProvider.GetService(typeof(SDTE));
+
             var workspace = componentModel.GetService<VisualStudioWorkspace>();
             var solution = workspace.CurrentSolution;
 
@@ -40,6 +42,27 @@ namespace RoslynInfoLogger
                     projectElement.SetAttributeValue("assemblyName", project.AssemblyName);
                     projectElement.SetAttributeValue("language", project.Language);
                     projectElement.SetAttributeValue("path", project.FilePath ?? "(none)");
+
+                    // Can we find a matching DTE project?
+                    var langProjProject = TryFindLangProjProject(dte, project);
+
+                    if (langProjProject != null)
+                    {
+                        var dteReferences = new XElement("dteReferences");
+                        projectElement.Add(dteReferences);
+
+                        foreach (var reference in langProjProject.References.Cast<VSLangProj.Reference>())
+                        {
+                            if (reference.SourceProject != null)
+                            {
+                                dteReferences.Add(new XElement("projectReference", new XAttribute("projectName", reference.SourceProject.Name)));
+                            }
+                            else
+                            {
+                                dteReferences.Add(new XElement("metadataReference", new XAttribute("path", reference.Path)));
+                            }
+                        }
+                    }
 
                     var workspaceReferencesElement = new XElement("workspaceReferences");
                     projectElement.Add(workspaceReferencesElement);
@@ -98,6 +121,13 @@ namespace RoslynInfoLogger
                 int cancelled;
                 threadedWaitDialog.EndWaitDialog(out cancelled);
             }
+        }
+
+        private static VSLangProj.VSProject TryFindLangProjProject(EnvDTE.DTE dte, Project project)
+        {
+            var dteProject = dte.Solution.Projects.Cast<EnvDTE.Project>().FirstOrDefault(p => string.Equals(p.FullName, project.FilePath, StringComparison.OrdinalIgnoreCase));
+
+            return dteProject?.Object as VSLangProj.VSProject;
         }
 
         private static XElement CreateElementForPortableExecutableReference(MetadataReference reference)
