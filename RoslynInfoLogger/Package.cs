@@ -27,7 +27,7 @@ namespace RoslynInfoLogger
 
         private void LogWorkspaceInfoCommandHandler(object sender, EventArgs e)
         {
-            string temporaryPath = Path.Combine(Path.GetTempPath(), "RoslynWorkspaceInfo.xml");
+            string temporaryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "RoslynWorkspaceInfo.xml");
 
             LogWorkspaceCommand.LogInfo(this, temporaryPath);
         }
