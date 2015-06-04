@@ -43,6 +43,19 @@ namespace RoslynInfoLogger
                     projectElement.SetAttributeValue("language", project.Language);
                     projectElement.SetAttributeValue("path", SanitizePath(project.FilePath ?? "(none)"));
 
+                    if (project.FilePath != null)
+                    {
+                        var msbuildProject = XDocument.Load(project.FilePath);
+                        var msbuildNamespace = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
+
+                        var msbuildReferencesElement = new XElement("msbuildReferences");
+                        projectElement.Add(msbuildReferencesElement);
+
+                        msbuildReferencesElement.Add(msbuildProject.Descendants(msbuildNamespace + "ProjectReference"));
+                        msbuildReferencesElement.Add(msbuildProject.Descendants(msbuildNamespace + "Reference"));
+                        msbuildReferencesElement.Add(msbuildProject.Descendants(msbuildNamespace + "ReferencePath"));
+                    }
+
                     // Can we find a matching DTE project?
                     var langProjProject = TryFindLangProjProject(dte, project);
 
