@@ -99,7 +99,7 @@ namespace RoslynInfoLogger
                     foreach (var diagnostic in compilation.GetDiagnostics(threadedWaitCallback.CancellationToken))
                     {
                         diagnosticsElement.Add(
-                            new XElement("diagnostic", 
+                            new XElement("diagnostic",
                                 new XAttribute("severity", diagnostic.Severity.ToString()),
                                 diagnostic.GetMessage()));
                     }
