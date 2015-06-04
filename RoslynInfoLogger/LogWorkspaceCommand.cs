@@ -72,7 +72,9 @@ namespace RoslynInfoLogger
                             }
                             else
                             {
-                                dteReferences.Add(new XElement("metadataReference", new XAttribute("path", SanitizePath(reference.Path))));
+                                dteReferences.Add(new XElement("metadataReference",
+                                    new XAttribute("path", SanitizePath(reference.Path)),
+                                    new XAttribute("name", reference.Name)));
                             }
                         }
                     }
