@@ -4,7 +4,9 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.LanguageServices;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Xml.Linq;
 
@@ -12,6 +14,9 @@ namespace RoslynInfoLogger
 {
     internal static class LogWorkspaceCommand
     {
+        private static int s_NextCompilationId;
+        private static readonly ConditionalWeakTable<Compilation, StrongBox<int>> s_CompilationIds = new ConditionalWeakTable<Compilation, StrongBox<int>>();
+
         public static void LogInfo(IServiceProvider serviceProvider, string path)
         {
             var componentModel = (IComponentModel)serviceProvider.GetService(typeof(SComponentModel));
@@ -108,6 +113,8 @@ namespace RoslynInfoLogger
                         compilationReferencesElement.Add(CreateElementForPortableExecutableReference(reference));
                     }
 
+                    projectElement.Add(CreateElementForCompilation(compilation));
+
                     var diagnosticsElement = new XElement("diagnostics");
                     projectElement.Add(diagnosticsElement);
 
@@ -171,7 +178,7 @@ namespace RoslynInfoLogger
 
             if (compilationReference != null)
             {
-                return new XElement("compilationReference", new XAttribute("assemblyName", compilationReference.Compilation.AssemblyName));
+                return new XElement("compilation", CreateElementForCompilation(compilationReference.Compilation));
             }
             else if (portableExecutableReference != null)
             {
@@ -183,6 +190,41 @@ namespace RoslynInfoLogger
             {
                 return new XElement("metadataReference", new XAttribute("display", SanitizePath(reference.Display)));
             }
+        }
+
+        private static XElement CreateElementForCompilation(Compilation compilation)
+        {
+            StrongBox<int> compilationId;
+            if (!s_CompilationIds.TryGetValue(compilation, out compilationId))
+            {
+                compilationId = new StrongBox<int>(s_NextCompilationId++);
+                s_CompilationIds.Add(compilation, compilationId);
+            }
+
+            var namespaces = new Queue<INamespaceSymbol>();
+            var typesElement = new XElement("types");
+
+            namespaces.Enqueue(compilation.Assembly.GlobalNamespace);
+
+            while (namespaces.Count > 0)
+            {
+                var @ns = namespaces.Dequeue();
+
+                foreach (var type in @ns.GetTypeMembers())
+                {
+                    typesElement.Add(new XElement("type", new XAttribute("name", type.ToDisplayString())));
+                }
+
+                foreach (var childNamespace in @ns.GetNamespaceMembers())
+                {
+                    namespaces.Enqueue(childNamespace);
+                }
+            }
+
+            return new XElement("compilation",
+                new XAttribute("objectId", compilationId.Value),
+                new XAttribute("assemblyIdentity", compilation.Assembly.Identity.ToString()),
+                typesElement);
         }
 
         private sealed class ThreadedWaitCallback : IVsThreadedWaitDialogCallback
