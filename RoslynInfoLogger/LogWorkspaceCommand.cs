@@ -178,7 +178,7 @@ namespace RoslynInfoLogger
 
             if (compilationReference != null)
             {
-                return new XElement("compilation", CreateElementForCompilation(compilationReference.Compilation));
+                return new XElement("compilationReference", CreateElementForCompilation(compilationReference.Compilation));
             }
             else if (portableExecutableReference != null)
             {
