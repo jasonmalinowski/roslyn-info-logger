@@ -47,6 +47,7 @@ namespace RoslynInfoLogger
                     projectElement.SetAttributeValue("assemblyName", project.AssemblyName);
                     projectElement.SetAttributeValue("language", project.Language);
                     projectElement.SetAttributeValue("path", SanitizePath(project.FilePath ?? "(none)"));
+                    projectElement.SetAttributeValue("outputPath", SanitizePath(project.OutputFilePath ?? "(none)"));
 
                     if (project.FilePath != null)
                     {
