@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Xml.Linq;
+using System.Threading.Tasks;
 
 namespace RoslynInfoLogger
 {
@@ -48,6 +49,13 @@ namespace RoslynInfoLogger
                     projectElement.SetAttributeValue("language", project.Language);
                     projectElement.SetAttributeValue("path", SanitizePath(project.FilePath ?? "(none)"));
                     projectElement.SetAttributeValue("outputPath", SanitizePath(project.OutputFilePath ?? "(none)"));
+
+                    var hasSuccesfullyLoaded = TryGetHasSuccessfullyLoaded(project, threadedWaitCallback.CancellationToken);
+
+                    if (hasSuccesfullyLoaded.HasValue)
+                    {
+                        projectElement.SetAttributeValue("hasSuccessfullyLoaded", hasSuccesfullyLoaded.Value);
+                    }
 
                     if (project.FilePath != null)
                     {
@@ -144,6 +152,24 @@ namespace RoslynInfoLogger
                 int cancelled;
                 threadedWaitDialog.EndWaitDialog(out cancelled);
             }
+        }
+
+        private static bool? TryGetHasSuccessfullyLoaded(Project project, CancellationToken cancellationToken)
+        {
+            // This method has not been made a public API, but is useful for analyzing some issues. It's only available in 1.3, so we'll support
+            // downlevel scenarios too.
+            var method = project.GetType().GetMethod("HasSuccessfullyLoadedAsync", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            if (method == null)
+            {
+                return null;
+            }
+
+            var task = method.Invoke(project, new object[] { cancellationToken }) as Task<bool>;
+
+            task.Wait(cancellationToken);
+
+            return task.Result;
         }
 
         private static VSLangProj.VSProject TryFindLangProjProject(EnvDTE.DTE dte, Project project)
