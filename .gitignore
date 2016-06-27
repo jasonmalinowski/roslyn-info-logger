@@ -2,4 +2,6 @@
 bin/
 obj/
 packages/
+project.lock.json
+*.nuget.targets
 *.user
