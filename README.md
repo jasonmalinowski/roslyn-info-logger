@@ -1,13 +1,12 @@
 # Roslyn Info Logger
 A Visual Studio extension that logs info from the Roslyn workspace to help in
-debugging Roslyn.  Unless you're actually debugging Roslyn there's absolutely
+debugging Roslyn. Unless you're actually debugging Roslyn there's absolutely
 no reason to go installing this.
 
 ## Instructions
-Once you've installed the extension, there's a new command "Log Roslyn
-Workspace Structure" at or near the top of the Tools menu.  If you're encountering
-an issue where a Roslyn developer has told you to use this tool, reproduce the
-issue first, and then run this command. It'll create a file
-RoslynWorkspaceStructure.xml on your desktop that can be e-mailed or attached to a
-bug as appropriate. There's no dialog telling you it did this, so once you've
-clicked the command start looking on your desktop for the file.
+Once you've installed the extension, a new set of commands under `Tools > Roslyn Information`:
+
+- **Log Workspace Structure:** This will create a file RoslynWorkspaceStructure.xml on your desktop. This contains a high-level
+  structure of the workspce state as viewed from different layers, helping diagnose which layer something went wrong in.
+  This file that can be e-mailed or attached to a bug, although it can often be large so zipping it is a good idea.
+  There's no dialog telling you it did this, so once you've clicked the command and it's completed start looking on your desktop for the file.

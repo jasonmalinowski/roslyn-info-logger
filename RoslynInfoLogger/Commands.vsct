@@ -1,12 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <Extern href="stdidcmd.h"/>
-  <Extern href="vsshlids.h"/>
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
 
   <Commands package="RoslynInfoLoggerPackage">
+    <Menus>
+      <Menu guid="RoslynInfoLoggerCmdSet" id="Menu">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_TOOLS_EXT_TOOLS" />
+        <Strings>
+          <ButtonText>Roslyn Information</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+    
     <Groups>
       <Group guid="RoslynInfoLoggerCmdSet" id="MenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+        <Parent guid="RoslynInfoLoggerCmdSet" id="Menu" />
       </Group>
     </Groups>
     
@@ -14,7 +23,7 @@
       <Button guid="RoslynInfoLoggerCmdSet" id="LogStructureCommandId" priority="0x0100" type="Button">
         <Parent guid="RoslynInfoLoggerCmdSet" id="MenuGroup" />
         <Strings>
-          <ButtonText>Log Roslyn Workspace Structure</ButtonText>
+          <ButtonText>Log Workspace Structure</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -24,6 +33,7 @@
     <GuidSymbol name="RoslynInfoLoggerPackage" value="{8f4299ec-e098-42b5-8f9b-025639f8c44c}" />
     
     <GuidSymbol name="RoslynInfoLoggerCmdSet" value="{0b975514-7844-4900-87fb-3ec29482b2af}">
+      <IDSymbol name="Menu" value="0x1000" />
       <IDSymbol name="MenuGroup" value="0x1020" />
       <IDSymbol name="LogStructureCommandId" value="0x0100" />
     </GuidSymbol>

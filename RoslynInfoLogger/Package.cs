@@ -10,7 +10,7 @@ namespace RoslynInfoLogger
 {
     [Guid("8f4299ec-e098-42b5-8f9b-025639f8c44c")]
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [ProvideMenuResource("Menus.ctmenu", 2)]
+    [ProvideMenuResource("Menus.ctmenu", 3)]
     internal sealed class Package : Microsoft.VisualStudio.Shell.Package
     {
         protected override void Initialize()
