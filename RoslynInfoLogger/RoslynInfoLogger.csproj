@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CommandIds.cs" />
-    <Compile Include="LogWorkspaceCommand.cs" />
+    <Compile Include="LogWorkspaceStructureCommand.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

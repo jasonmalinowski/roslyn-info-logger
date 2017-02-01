@@ -10,7 +10,7 @@ namespace RoslynInfoLogger
 {
     [Guid("8f4299ec-e098-42b5-8f9b-025639f8c44c")]
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideMenuResource("Menus.ctmenu", 2)]
     internal sealed class Package : Microsoft.VisualStudio.Shell.Package
     {
         protected override void Initialize()
@@ -19,17 +19,17 @@ namespace RoslynInfoLogger
 
             var commandService = (OleMenuCommandService)GetService(typeof(IMenuCommandService));
 
-            var menuCommandID = new CommandID(CommandIds.CommandSet, CommandIds.LogInfoCommandId);
-            EventHandler eventHandler = LogWorkspaceInfoCommandHandler;
+            var menuCommandID = new CommandID(CommandIds.CommandSet, CommandIds.LogStructureCommandId);
+            EventHandler eventHandler = LogWorkspaceStructureCommandHandler;
             var menuItem = new MenuCommand(eventHandler, menuCommandID);
             commandService.AddCommand(menuItem);
         }
 
-        private void LogWorkspaceInfoCommandHandler(object sender, EventArgs e)
+        private void LogWorkspaceStructureCommandHandler(object sender, EventArgs e)
         {
-            string temporaryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "RoslynWorkspaceInfo.xml");
+            string temporaryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "RoslynWorkspaceStructure.xml");
 
-            LogWorkspaceCommand.LogInfo(this, temporaryPath);
+            LogWorkspaceStructureCommand.LogInfo(this, temporaryPath);
         }
     }
 }

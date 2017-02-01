@@ -11,10 +11,10 @@
     </Groups>
     
     <Buttons>
-      <Button guid="RoslynInfoLoggerCmdSet" id="LogWorkspaceInfoCommandId" priority="0x0100" type="Button">
+      <Button guid="RoslynInfoLoggerCmdSet" id="LogStructureCommandId" priority="0x0100" type="Button">
         <Parent guid="RoslynInfoLoggerCmdSet" id="MenuGroup" />
         <Strings>
-          <ButtonText>Log Roslyn Workspace Info</ButtonText>
+          <ButtonText>Log Roslyn Workspace Structure</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -25,7 +25,7 @@
     
     <GuidSymbol name="RoslynInfoLoggerCmdSet" value="{0b975514-7844-4900-87fb-3ec29482b2af}">
       <IDSymbol name="MenuGroup" value="0x1020" />
-      <IDSymbol name="LogWorkspaceInfoCommandId" value="0x0100" />
+      <IDSymbol name="LogStructureCommandId" value="0x0100" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>

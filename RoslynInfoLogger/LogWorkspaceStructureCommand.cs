@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace RoslynInfoLogger
 {
-    internal static class LogWorkspaceCommand
+    internal static class LogWorkspaceStructureCommand
     {
         private static int s_NextCompilationId;
         private static readonly ConditionalWeakTable<Compilation, StrongBox<int>> s_CompilationIds = new ConditionalWeakTable<Compilation, StrongBox<int>>();

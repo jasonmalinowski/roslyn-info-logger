@@ -11,6 +11,6 @@ namespace RoslynInfoLogger
         public static readonly Guid CommandSet = new Guid("{0b975514-7844-4900-87fb-3ec29482b2af}");
 
         public const int MenuGroup = 0x1020;
-        public const int LogInfoCommandId = 0x100;
+        public const int LogStructureCommandId = 0x100;
     }
 }
