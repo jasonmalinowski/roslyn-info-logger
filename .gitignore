@@ -1,7 +1,7 @@
 .vs/
 bin/
 obj/
-packages/
 project.lock.json
+*.nuget.props
 *.nuget.targets
 *.user
