@@ -51,7 +51,7 @@ namespace RoslynInfoLogger
             {
                 _refreshPending = true;
 
-                System.Threading.Tasks.Task.Factory.StartNew(RefreshDisplay, CancellationToken.None, TaskCreationOptions.None, _foregroundTaskScheduler);
+                System.Threading.Tasks.Task.Delay(500).ContinueWith(_ => RefreshDisplay(), CancellationToken.None, TaskContinuationOptions.None, _foregroundTaskScheduler);
             }
         }
 
