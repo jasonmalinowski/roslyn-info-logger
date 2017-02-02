@@ -5,7 +5,7 @@
 
   <Commands package="RoslynInfoLoggerPackage">
     <Menus>
-      <Menu guid="RoslynInfoLoggerCmdSet" id="Menu">
+      <Menu guid="RoslynInfoLoggerCmdSet" id="Menu" priority="0x100">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_TOOLS_EXT_TOOLS" />
         <Strings>
           <ButtonText>Roslyn Information</ButtonText>
@@ -26,6 +26,13 @@
           <ButtonText>Log Workspace Structure</ButtonText>
         </Strings>
       </Button>
+
+      <Button guid="RoslynInfoLoggerCmdSet" id="ShowEventCountToolWindowCommandId" priority="0x0200" type="Button">
+        <Parent guid="RoslynInfoLoggerCmdSet" id="MenuGroup" />
+        <Strings>
+          <ButtonText>Show Workspace Change Event Counts</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
   </Commands>
   
@@ -36,6 +43,7 @@
       <IDSymbol name="Menu" value="0x1000" />
       <IDSymbol name="MenuGroup" value="0x1020" />
       <IDSymbol name="LogStructureCommandId" value="0x0100" />
+      <IDSymbol name="ShowEventCountToolWindowCommandId" value="0x0200" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>

@@ -12,5 +12,6 @@ namespace RoslynInfoLogger
 
         public const int MenuGroup = 0x1020;
         public const int LogStructureCommandId = 0x100;
+        public const int ShowEventCountToolWindowCommandId = 0x200;
     }
 }
