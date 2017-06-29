@@ -200,18 +200,22 @@ namespace RoslynInfoLogger
 
         private static XElement CreateElementForPortableExecutableReference(MetadataReference reference)
         {
+            var aliasesAttribute = new XAttribute("aliases", string.Join(",", reference.Properties.Aliases));
             var compilationReference = reference as CompilationReference;
             var portableExecutableReference = reference as PortableExecutableReference;
 
             if (compilationReference != null)
             {
-                return new XElement("compilationReference", CreateElementForCompilation(compilationReference.Compilation));
+                return new XElement("compilationReference",
+                    aliasesAttribute,
+                    CreateElementForCompilation(compilationReference.Compilation));
             }
             else if (portableExecutableReference != null)
             {
                 return new XElement("peReference",
                     new XAttribute("file", SanitizePath(portableExecutableReference.FilePath ?? "(none)")),
-                    new XAttribute("display", SanitizePath(portableExecutableReference.Display)));
+                    new XAttribute("display", SanitizePath(portableExecutableReference.Display)),
+                    aliasesAttribute);
             }
             else
             {
