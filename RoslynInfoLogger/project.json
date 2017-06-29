@@ -2,6 +2,7 @@
   "dependencies": {
     "Microsoft.CodeAnalysis.Analyzers": "1.1.0",
     "Microsoft.VisualStudio.LanguageServices": "1.0.0",
+    "Microsoft.VisualStudio.ComponentModelHost": "14.0.25424",
     "Microsoft.VisualStudio.OLE.Interop": "7.10.6070",
     "Microsoft.VisualStudio.SDK.VsixSuppression": "14.0.50703",
     "Microsoft.VisualStudio.Shell.14.0": "14.0.23205",
