@@ -92,7 +92,27 @@ namespace RoslynInfoLogger
                     {
                         projectChangeKinds.Add("removed MetadataReferences");
                     }
-                    
+
+                    if (changes.GetAddedDocuments().Any())
+                    {
+                        projectChangeKinds.Add("add Documents");
+                    }
+
+                    if (changes.GetRemovedDocuments().Any())
+                    {
+                        projectChangeKinds.Add("removed Documents");
+                    }
+
+                    if (changes.GetAddedAdditionalDocuments().Any())
+                    {
+                        projectChangeKinds.Add("add AdditionalDocuments");
+                    }
+
+                    if (changes.GetRemovedAdditionalDocuments().Any())
+                    {
+                        projectChangeKinds.Add("removed AdditionalDocuments");
+                    }
+
                     if (newProject.SupportsCompilation && !object.Equals(oldProject.CompilationOptions, newProject.CompilationOptions))
                     {
                         projectChangeKinds.Add("CompilationOptions changed");
