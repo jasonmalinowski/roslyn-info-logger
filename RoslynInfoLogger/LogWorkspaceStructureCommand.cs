@@ -10,6 +10,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Xml.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
+using Microsoft;
 
 namespace RoslynInfoLogger
 {
@@ -20,13 +22,17 @@ namespace RoslynInfoLogger
 
         public static void LogInfo(IServiceProvider serviceProvider, string path)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var componentModel = (IComponentModel)serviceProvider.GetService(typeof(SComponentModel));
+            Assumes.Present(componentModel);
             var dte = (EnvDTE.DTE)serviceProvider.GetService(typeof(SDTE));
 
             var workspace = componentModel.GetService<VisualStudioWorkspace>();
             var solution = workspace.CurrentSolution;
 
             var threadedWaitDialog = (IVsThreadedWaitDialog3)serviceProvider.GetService(typeof(SVsThreadedWaitDialog));
+            Assumes.Present(threadedWaitDialog);
             var threadedWaitCallback = new ThreadedWaitCallback();
 
             int projectsProcessed = 0;
@@ -113,7 +119,9 @@ namespace RoslynInfoLogger
                         workspaceReferencesElement.Add(referenceElement);
                     }
 
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits -- this is fine since it's a Roslyn API
                     var compilation = project.GetCompilationAsync(threadedWaitCallback.CancellationToken).Result;
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
                     var compilationReferencesElement = new XElement("compilationReferences");
                     projectElement.Add(compilationReferencesElement);
 
@@ -167,14 +175,20 @@ namespace RoslynInfoLogger
 
             var task = method.Invoke(project, new object[] { cancellationToken }) as Task<bool>;
 
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits -- this is fine since it's a Roslyn API
+
             task.Wait(cancellationToken);
 
             return task.Result;
+
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
         private static VSLangProj.VSProject TryFindLangProjProject(EnvDTE.DTE dte, Project project)
         {
-            var dteProject = dte.Solution.Projects.Cast<EnvDTE.Project>().FirstOrDefault(p => string.Equals(p.FullName, project.FilePath, StringComparison.OrdinalIgnoreCase));
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            var dteProject = dte.Solution.Projects.Cast<EnvDTE.Project>().FirstOrDefault(p => { ThreadHelper.ThrowIfNotOnUIThread(); return string.Equals(p.FullName, project.FilePath, StringComparison.OrdinalIgnoreCase); });
 
             return dteProject?.Object as VSLangProj.VSProject;
         }

@@ -51,7 +51,9 @@ namespace RoslynInfoLogger
             {
                 _refreshPending = true;
 
+#pragma warning disable VSTHRD110 // Observe result of async calls
                 System.Threading.Tasks.Task.Delay(500).ContinueWith(_ => RefreshDisplay(), CancellationToken.None, TaskContinuationOptions.None, _foregroundTaskScheduler);
+#pragma warning restore VSTHRD110 // Observe result of async calls
             }
         }
 

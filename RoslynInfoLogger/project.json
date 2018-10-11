@@ -19,7 +19,7 @@
     "Microsoft.VisualStudio.TextManager.Interop": "7.10.6070",
     "Microsoft.VisualStudio.TextManager.Interop.8.0": "8.0.50727",
     "Microsoft.VisualStudio.Utilities": "14.0.23205",
-    "Microsoft.VSSDK.BuildTools": "14.3.25407"
+    "Microsoft.VSSDK.BuildTools": "15.8.3252"
   },
   "frameworks": {
     "net46": {}

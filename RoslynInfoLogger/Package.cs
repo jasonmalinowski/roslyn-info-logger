@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
+using Microsoft;
 
 namespace RoslynInfoLogger
 {
@@ -18,9 +19,12 @@ namespace RoslynInfoLogger
     {
         protected override void Initialize()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             base.Initialize();
 
             var commandService = (OleMenuCommandService)GetService(typeof(IMenuCommandService));
+            Assumes.Present(commandService);
 
             commandService.AddCommand(
                 new MenuCommand(LogWorkspaceStructureCommandHandler,
@@ -33,6 +37,8 @@ namespace RoslynInfoLogger
 
         private void LogWorkspaceStructureCommandHandler(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             string temporaryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "RoslynWorkspaceStructure.xml");
 
             LogWorkspaceStructureCommand.LogInfo(this, temporaryPath);
@@ -40,6 +46,8 @@ namespace RoslynInfoLogger
 
         private void ShowEventCountToolWindowCommandHandler(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             ToolWindowPane window = this.FindToolWindow(typeof(WorkspaceChangeEventCountToolWindow), id: 0, create: true);
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
