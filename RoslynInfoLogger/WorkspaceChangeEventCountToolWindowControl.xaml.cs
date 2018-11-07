@@ -128,6 +128,21 @@ namespace RoslynInfoLogger
                         projectChangeKinds.Add("OutputFilePath changed");
                     }
 
+                    if (oldProject.Name != newProject.Name)
+                    {
+                        projectChangeKinds.Add("Name changed");
+                    }
+
+                    if (oldProject.FilePath != newProject.FilePath)
+                    {
+                        projectChangeKinds.Add("FilePath changed");
+                    }
+
+                    if (oldProject.AssemblyName != newProject.AssemblyName)
+                    {
+                        projectChangeKinds.Add("AssemblyName changed");
+                    }
+
                     if (projectChangeKinds.Count == 0)
                     {
                         projectChangeKinds.Add("unclassified");
